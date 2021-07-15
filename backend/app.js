@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const gifRoutes = require('./routes/gif');
 const commentaireRoutes = require('./routes/commentaire');
+const userRoutes = require('./routes/user');
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.use((req, res, next) => {
 
 app.use('/api/gifs', gifRoutes);
 app.use('/api/commentaires', commentaireRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
