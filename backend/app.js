@@ -1,7 +1,7 @@
 const express = require('express');
-const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const gifRoutes = require('./routes/gif');
+const commentaireRoutes = require('./routes/commentaire');
 
 const app = express();
 
@@ -17,6 +17,6 @@ app.use((req, res, next) => {
 });
 
 app.use('/api/gifs', gifRoutes);
-
+app.use('/api/commentaires', commentaireRoutes);
 
 module.exports = app;
