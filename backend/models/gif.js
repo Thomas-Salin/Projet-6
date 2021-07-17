@@ -30,7 +30,13 @@ class Gif {
     findOne(id){
         return connection.promise().query(`SELECT gif.id, gif_url, titre, DATE_FORMAT(date_heure_publi, '%e/%c/%Y à %kh%i') AS date, Utilisateur.prenom AS prenom, Utilisateur.nom AS nom FROM Gif INNER JOIN Utilisateur ON Gif.utilisateur_id = Utilisateur.id WHERE gif.id = ?`, [id])
     }
-    update(id){
+    find(userId){
+        return connection.promise().query(`SELECT gif.id, gif_url, titre, DATE_FORMAT(date_heure_publi, '%e/%c/%Y à %kh%i') AS date FROM Gif WHERE utilisateur_id = ? `, [userId])
+    }
+    count(userId){
+        return connection.promise().query(`SELECT COUNT(*) AS count FROM Gif WHERE utilisateur_id = ?`, [userId])
+    }
+    updateOne(id){
         return connection.promise().query(`UPDATE Gif SET titre = ? WHERE id = ?`, [this.titre, id])
     }
     deleteOne(id){

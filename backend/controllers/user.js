@@ -1,9 +1,11 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 
 exports.signup =  (req, res, next) => {
+    console.log(req.body);
     bcrypt.hash(req.body.password, 10)
         .then (hash => {
             const user = new User({
@@ -35,7 +37,7 @@ exports.login = (req, res, next) => {
         .then( ([rows, fields]) => {
             let countEmail = Object.values(rows)[0].count;
 
-            if(countEmail == 0){
+            if(countEmail === 0){
                 res.status(400).json({erreur: "Utilisateur inconnu"});
             }if (countEmail === 1){
                 user.findOne(req.body.email)
@@ -62,4 +64,57 @@ exports.login = (req, res, next) => {
             }
         })            
     .catch(() => res.status(400).json({erreur: 're'}))
+};
+
+exports.getAllUser = (req, res, next) => {
+    
+    const user = new User();
+    user.findAll()
+      .then ( ([rows, fields]) => {    
+          let response = Object.values(rows);
+          return res.status(200).json({response});
+      })
+      .catch(() => res.status(500).json({erreur: 'Connexion au serveur impossible'}))
+};
+
+exports.getOneUser = (req, res, next) => {
+
+    let user = new User();
+
+    user.find(req.params.id)
+      .then ( ([rows, fields]) => {
+        let response = Object.values(rows);
+        res.status(200).json({response})
+      })
+      .catch( (rows) => res.status(400).json({rows}))
+};
+
+exports.modifyUser = (req, res, next ) => {
+    const user = new User()
+    const photoUser = JSON.parse(req.body.photo_profil);
+
+    user.updateOne(req.params.id, photoUser)
+        .then(([rows, fields]) => {
+            res.status(200).json({message: "Photo mis à jour"})
+        })
+        .catch(() => res.status(400).json({erreur: "Connexion au serveur impossible"}))
+};
+
+exports.deleteUser = (req, res, next) => {
+
+    let user = new User();
+
+    user.find(req.params.id)
+      .then (([rows, fields]) =>{
+        const photoUser = Object.values(rows)[0].photo_profil;
+        const filename = photoUser.split('/photos/')[1];
+        fs.unlink(`photos/${filename}`, () => {
+          user.deleteOne(req.params.id)
+            .then( ([rows,field]) =>{
+              res.status(200).json({message: "Utilisateur supprimé"})
+            })
+            .catch( () => {res.status(500).json({erreur: "Connexion au serveur impossible"})});
+          })
+      })
+      .catch( () => res.status(500).json({erreur:"Connexion au serveur impossible"}));
 };

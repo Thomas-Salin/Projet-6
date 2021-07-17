@@ -1,9 +1,15 @@
 const Gif = require('../models/gif');
+const fs = require('fs');
 
 
 exports.createGif =  (req, res, next) => {
-  
-    const gif = new Gif(req.body);
+
+    const gifObject = JSON.parse(req.body.gif)
+    const gif = new Gif({
+      gifUrl: `${req.protocol}://${req.get('host')}/gifs/${req.file.filename}`,
+      utilisateurId: gifObject.utilisateurId,
+      titre: gifObject.titre
+    });
     gif.add()
         .then ( ([rows,fields]) => {
             res.status(201).json({message: 'Gif publié'})
@@ -20,7 +26,7 @@ exports.getAllGif = (req, res, next) => {
           let response = Object.values(rows);
           return res.status(200).json({response});
       })
-      .catch(() => res.status(500).json({error: 'Connexion au serveur impossible'}))
+      .catch(() => res.status(500).json({erreur: 'Connexion au serveur impossible'}))
 };
 
 exports.getOneGif = (req, res, next) => {
@@ -32,19 +38,49 @@ exports.getOneGif = (req, res, next) => {
       let response = Object.values(rows);
       res.status(200).json({response})
     })
-    .catch( (rows) => res.status(400).json({rows}))
+    .catch( () => res.status(400).json({erreur: "Connexion au serveur impossible"}))
+};
+
+exports.getGifUser = (req, res, next) => {
+
+  let gif = new Gif();
+
+  gif.count(req.params.id)
+    .then(([rows, fields]) => {
+      let countGif = Object.values(rows)[0].count;
+
+        if(countGif === 0){
+          return res.status(200).json({message: "Aucun gif publié"})
+        }
+        gif.find(req.params.id)
+        .then ( ([rows, fields]) => {
+          let response = Object.values(rows);
+          res.status(200).json({response})
+        })
+        .catch((rows) => res.status(400).json({rows}))
+    })
+    .catch (() => res.status(400).json({erreur: "Connexion au serveur impossible"}))
+
 };
 
 
 exports.deleteGif = (req, res, next) => {
 
     let gif = new Gif();
-    gif.deleteOne(req.params.id)
-      .then( ([rows,field]) =>{
-        res.status(200).json({message: "Gif supprimé"})
+
+    gif.findOne(req.params.id)
+      .then (([rows, fields]) =>{
+        const gifUrl = Object.values(rows)[0].gif_url;
+        const filename = gifUrl.split('/gifs/')[1];
+        fs.unlink(`gifs/${filename}`, () => {
+          gif.deleteOne(req.params.id)
+            .then( ([rows,field]) =>{
+              res.status(200).json({message: "Gif supprimé"})
+            })
+            .catch( () => {res.status(500).json({erreur: "Connexion au serveur impossible"})})
+          })
       })
-      .catch( (rows) => {res.status(400).json({erreur: rows})})
-  
+      .catch( () => res.status(500).json({erreur:"Connexion au serveur impossible"}));
 };
 
 

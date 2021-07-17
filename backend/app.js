@@ -1,13 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const path = require('path');
 const gifRoutes = require('./routes/gif');
 const commentaireRoutes = require('./routes/commentaire');
 const userRoutes = require('./routes/user');
 
+
 const app = express();
-
-
-app.use(bodyParser.json());
 
 
 app.use((req, res, next) => {
@@ -17,8 +16,11 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(bodyParser.json());
+app.use('/gifs', express.static(path.join(__dirname, 'gifs')));
+app.use('/photos', express.static(path.join(__dirname, 'photos')));
 app.use('/api/gifs', gifRoutes);
 app.use('/api/commentaires', commentaireRoutes);
-app.use('/api/auth', userRoutes);
+app.use('/api/users', userRoutes);
 
 module.exports = app;
