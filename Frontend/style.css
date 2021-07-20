@@ -14,7 +14,7 @@
     margin-bottom: 150px;
 }
 
-.flex{
+.box_flex_photo{
 width: 20%;
 }
 
@@ -40,4 +40,8 @@ width: 20%;
     padding: 10px;
     font-weight: bolder;
     color: white;
+}
+
+.white_space{
+    white-space: pre-wrap;
 }
