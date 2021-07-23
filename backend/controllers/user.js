@@ -5,7 +5,6 @@ const fs = require('fs');
 
 
 exports.signup =  (req, res, next) => {
-    console.log(req.body);
     bcrypt.hash(req.body.password, 10)
         .then (hash => {
             const user = new User({
@@ -21,7 +20,7 @@ exports.signup =  (req, res, next) => {
             .catch((rows) => {
                 let rowserr = Object.values(rows)[2];
                     if(rowserr === 1062){
-                res.status(400).json({erreur: "email dèjà existant"})
+                res.status(400).json({erreur: "email dèjà existante"})
                 }else {
                     res.status(400).json({erreur: "Tous les champs requis ne sont pas remplis correctement"})
                 }                
@@ -50,6 +49,7 @@ exports.login = (req, res, next) => {
                                     return res.status(401).json({erreur :" Mot de passe erroré"})
                                 }
                                 res.status(200).json({
+                                    admin: Object.values(rows)[0].admin,
                                     userId: Object.values(rows)[0].id,
                                     token: jwt.sign(
                                         { userId: req.body.id }, 
@@ -63,7 +63,7 @@ exports.login = (req, res, next) => {
                     .catch( () => res.status(500).json({erreur: "connexion impossible à la base de donnée"}))    
             }
         })            
-    .catch(() => res.status(400).json({erreur: 're'}))
+    .catch(() => res.status(400).json({erreur: 'Connexion impossible à la base de donnée'}))
 };
 
 exports.getAllUser = (req, res, next) => {

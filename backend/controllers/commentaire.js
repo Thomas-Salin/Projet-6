@@ -28,7 +28,7 @@ exports.getGifComment = (req, res, next) => {
           let response = Object.values(rows);
           return res.status(200).json({response});
         })
-        .catch ( () => res.status(500).json({erreur :'Connexion '}))
+        .catch ( () => res.status(500).json({erreur :'Connexion impossible au serveur'}))
 
       })
     .catch(() => res.status(400).json({erreur: "Connexion au serveur impossible"}))
