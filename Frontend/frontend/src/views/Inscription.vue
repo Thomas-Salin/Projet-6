@@ -1,34 +1,34 @@
 <template>
 
-    <div class= "p-0 col-10 col-md-4 mx-auto text-center ">
+    <div class= "p-0 col-12 col-md-4 mx-auto my-0 text-center">
 
-        <img class=" w-50 bg-light p-0" src="/logo/icon-above-font.svg" alt="logo Groupomania">
+        <img class="w-50 bg-light p-0 my-0" src="/logo/icon-above-font.svg" alt="logo Groupomania">
 
-        <div class = "form-group pb-2">
+        <div class ="form-group">
             <label for="prenom">Prénom</label><br>
-            <input type="text" id="prenom" name="prenom" size="30" required v-model="prenom">
+            <input type="text" id="prenom" name="prenom" required v-model="prenom">
         </div>
 
-        <div class="form-group pb-2">
+        <div class="form-group">
             <label for="nom">Nom</label><br>
-            <input type="text" id="nom" name="nom" size="30" required v-model="nom">
+            <input type="text" id="nom" name="nom" required v-model="nom">
         </div>
 
-        <div class="form-group pb-2">
+        <div class="form-group ">
             <label for="email">Email</label><br>
-            <input type="email" id="email" name="email" size="30" required v-model="email">
+            <input type="email" id="email" name="email" required v-model="email">
         </div>
 
         <div class="form-group pb-2">
             <label for="mot_de_passe">Mot de passe</label><br>
-            <input type="text" id="password" name="password" size="30" required v-model="password">
+            <input type="text" id="password" name="password" required v-model="password">
         </div>
 
-        <div class=" form-group p-4">
+        <div class=" form-group">
             <bouton @click="createnewuser()" intitule="S'inscrire"/>
         </div>
 
-        <p>Vous avez déjà un compte ? <a href="./html/connexion.html">Connectez-vous</a></p>
+        <p>Vous avez déjà un compte ? <router-link class="nav-link" to="/connexion">Connectez-vous</router-link></p>
 
 
     </div>

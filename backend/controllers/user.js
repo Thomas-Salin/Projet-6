@@ -104,17 +104,10 @@ exports.deleteUser = (req, res, next) => {
 
     let user = new User();
 
-    user.find(req.params.id)
-      .then (([rows, fields]) =>{
-        const photoUser = Object.values(rows)[0].photo_profil;
-        const filename = photoUser.split('/photos/')[1];
-        fs.unlink(`photos/${filename}`, () => {
-          user.deleteOne(req.params.id)
+
+        user.deleteOne(req.params.id)
             .then( ([rows,field]) =>{
               res.status(200).json({message: "Utilisateur supprimé"})
             })
             .catch( () => {res.status(500).json({erreur: "Connexion au serveur impossible"})});
-          })
-      })
-      .catch( () => res.status(500).json({erreur:"Connexion au serveur impossible"}));
 };

@@ -17,9 +17,9 @@
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
                 <div class="card-body text-center p-3">
                     <label for="titre_post">Titre</label><br>
-                    <input class="my-3" type="text" id="titre_post" name="titre_post" size="50"><br>
+                    <input class="my-3" type="text" id="titre_post" name="titre_post"><br>
                     <div class="d-flex justify-content-around">
-                        <button class="my-3 params_button flex" type="submit">Publiez</button>
+                        <button class="my-3 params_button flex" type="submit">Publier</button>
                         <div class="flex align-self-center">
                             <input type="file" id="bouton" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Choisir un gif</label>
                         </div>
@@ -36,7 +36,7 @@
         <div class="row">
             
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
-                <a class= "border border-dark mt-5 text-center -5 w-75 mx-auto" href="post.html"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></a>
+                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center -5 w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ post.titre }}</p>
                    <div class="d-flex text-align p-0 border border-dark rounded">
@@ -44,16 +44,16 @@
                             <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
-                            <router-link :to="{ path: 'profil', query: {id: `${post.utilisateurId}` }}"><p class="m-0 font_size">{{ post.prenom }} {{ post.nom }}</p></router-link>
+                            <router-link :to="{ path: 'profil', query: {userId: `${post.utilisateurId}`}}"><p class="m-0 font_size">{{ post.prenom }} {{ post.nom }}</p></router-link>
                             <p class="m-0 font_size">le {{ post.date }}</p>
                         </div>
                    </div>
                     <div class="d-flex justify-content-around">
                         <div>
-                            <bouton intitule="Commenter"/>
+                            <bouton @click="commentGif(`${post.id}`)" intitule="Commenter"/>
                         </div>
                         <div class="align-self-center">
-                            <bouton intitule="Supprimer"/>
+                            <bouton @click="deleteGif(`${post.id}`)" intitule="Supprimer"/>
                         </div>
                     </div>
                 </div>
@@ -68,6 +68,7 @@
 <script>
 import Navlink from '@/components/Navlink.vue'
 import bouton from '@/components/Button.vue'
+import router from '@/router/index.js'
 
 export default {
     name: 'Nav',
@@ -78,11 +79,12 @@ export default {
     data: function(){
         return{
             posts: [],
-            url:""
+            userI: "",
             
         }
     },
     beforeMount(){
+        this.userI = sessionStorage.userId;
         fetch('http://localhost:3000/api/gifs')
         .then(response =>{
             response.json()
@@ -90,7 +92,19 @@ export default {
                 this.posts = data.response;
             })
         })
-    }
+    },
+    methods:{
+        commentGif(gifId){
+           router.push({ path: 'post', query: { gifId: gifId }}); 
+        },
+        deleteGif(gifId){
+            fetch(`http://localhost:3000/api/gifs/${gifId}`, {
+               method: 'DELETE',
+            })
+            .then(response => response.json())
+                .then (() => location.reload()) 
+        }         
+    }  
 }
 
 
@@ -116,11 +130,6 @@ width: 20%;
     font-size: 11px;
 }
 
-@media all and (min-width: 768px){
-    .font_size{
-        font-size: 12px;
-    } 
-}
 
 #bouton{
     display: none;
@@ -132,6 +141,7 @@ width: 20%;
     background-color: #fd2d01;
     padding: 10px;
     font-weight: bolder;
+    font-size: 12px;
     color: white;
     cursor: pointer;
 }

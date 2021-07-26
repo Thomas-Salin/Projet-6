@@ -6,12 +6,12 @@
 
         <div class="form-group pb-2">
             <label for="email">Email</label><br>
-            <input type="email" id="email" name="email" size="30" required v-model="email">
+            <input type="email" id="email" name="email" required v-model="email">
         </div>
 
         <div class="form-group pb-2">
             <label for="mot_de_passe">Mot de passe</label><br>
-            <input type="text" id="mot_de_passe" name="mot_de_passe" size="30" required v-model="password">
+            <input type="text" id="mot_de_passe" name="mot_de_passe" required v-model="password">
         </div>
 
         <div class="form-group p-4">

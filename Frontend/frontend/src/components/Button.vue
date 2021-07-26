@@ -19,8 +19,8 @@ export default {
     .params_button{
     border-radius: 15px;
     background-color: #fd2d01;
-    padding: 10px;
-    font-weight: bolder;
+    padding: 8px;
+    font-weight: bold;
     color: white;
 }
 

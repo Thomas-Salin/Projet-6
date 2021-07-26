@@ -12,7 +12,7 @@
           <router-link class="nav-link text-light" to="/utilisateurs">Utilisateurs</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link text-light" to="/profil">Profil</router-link>
+          <router-link class="nav-link text-light" :to="{ path: 'profil', query: { userId: id }}">Profil</router-link>
         </li>
         <li class="nav-item">
           <router-link class="nav-link text-light" to="/connexion">Deconnexion</router-link>
@@ -26,7 +26,15 @@
 
 <script>
 export default{
-  name: 'Navlink'
+  name: 'Navlink',
+  data: function(){
+    return{
+      id: 0
+    }
+  },
+  beforeMount(){
+    this.id = sessionStorage.userId;
+  }
 }
 </script>
 

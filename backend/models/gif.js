@@ -28,7 +28,7 @@ class Gif {
         return connection.promise().query(`SELECT gif.id, gif_url, titre, DATE_FORMAT(date_heure_publi, '%e/%c/%Y à %kh%i') AS date, Utilisateur.prenom AS prenom, Utilisateur.nom AS nom, utilisateur_id AS utilisateurId FROM Gif INNER JOIN Utilisateur ON Gif.utilisateur_id = Utilisateur.id ORDER BY date DESC`)
     }
     findOne(id){
-        return connection.promise().query(`SELECT gif.id, gif_url, titre, DATE_FORMAT(date_heure_publi, '%e/%c/%Y à %kh%i') AS date, Utilisateur.prenom AS prenom, Utilisateur.nom AS nom,  FROM Gif INNER JOIN Utilisateur ON Gif.utilisateur_id = Utilisateur.id WHERE gif.id = ?`, [id])
+        return connection.promise().query(`SELECT gif.id, gif_url, titre, DATE_FORMAT(date_heure_publi, '%e/%c/%Y à %kh%i') AS date, Utilisateur.prenom AS prenom, Utilisateur.nom AS nom, utilisateur_id AS utilisateurId, utilisateur.photo_profil  FROM Gif INNER JOIN Utilisateur ON Gif.utilisateur_id = Utilisateur.id WHERE gif.id = ?`, [id])
     }
     find(userId){
         return connection.promise().query(`SELECT gif.id, gif_url, titre, DATE_FORMAT(date_heure_publi, '%e/%c/%Y à %kh%i') AS date FROM Gif WHERE utilisateur_id = ? `, [userId])
