@@ -16,12 +16,17 @@
 
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
                 <div class="card-body text-center p-3">
+                    <div class="border border-dark w-75 text-center mx-auto my-2">
+                       <img id="newgif" class="w-100" :src="gifUrl"> 
+                    </div>
                     <label for="titre_post">Titre</label><br>
                     <input class="my-3" type="text" id="titre_post" name="titre_post"><br>
                     <div class="d-flex justify-content-around">
-                        <button class="my-3 params_button flex" type="submit">Publier</button>
                         <div class="flex align-self-center">
-                            <input type="file" id="bouton" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Choisir un gif</label>
+                            <bouton @click="createNewGif" intitule="Publier"/>
+                        </div>
+                        <div class="flex align-self-center">
+                            <input type="file" id="bouton" @change="getNewGif" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Choisir un gif</label>
                         </div>
                     </div>
                 </div>
@@ -36,23 +41,23 @@
         <div class="row">
             
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
-                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center -5 w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
+                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ post.titre }}</p>
                    <div class="d-flex text-align p-0 border border-dark rounded">
-                        <div class="flex box_flex_photo m-1  w-0">
+                        <div class="flex m-1">
                             <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
                         </div>
-                        <div class="w-100 align-self-center">
-                            <router-link :to="{ path: 'profil', query: {userId: `${post.utilisateurId}`}}"><p class="m-0 font_size">{{ post.prenom }} {{ post.nom }}</p></router-link>
-                            <p class="m-0 font_size">le {{ post.date }}</p>
+                        <div class=" flex w-100 align-self-center">
+                            <router-link :to="{ path: 'profil', query: {userId: `${post.utilisateurId}`}}"><p class="m-0 fst-italic">{{ post.prenom }} {{ post.nom }}</p></router-link>
+                            <p class="m-0">le {{ post.date }}</p>
                         </div>
                    </div>
                     <div class="d-flex justify-content-around">
                         <div>
                             <bouton @click="commentGif(`${post.id}`)" intitule="Commenter"/>
                         </div>
-                        <div class="align-self-center">
+                        <div class="align-self-center" v-show="post.utilisateurId === visitor.id || visitor.admin === true">
                             <bouton @click="deleteGif(`${post.id}`)" intitule="Supprimer"/>
                         </div>
                     </div>
@@ -71,7 +76,7 @@ import bouton from '@/components/Button.vue'
 import router from '@/router/index.js'
 
 export default {
-    name: 'Nav',
+    name: 'Accueil',
     components: {
         Navlink,
         bouton
@@ -79,12 +84,16 @@ export default {
     data: function(){
         return{
             posts: [],
-            userI: "",
+            gifUrl: "/logo/cloud-computing-1990405_640.png",
+            visitor: {
+                id: parseInt(sessionStorage.getItem('userId')),
+                admin: false,
+            }
             
         }
     },
     beforeMount(){
-        this.userI = sessionStorage.userId;
+
         fetch('http://localhost:3000/api/gifs')
         .then(response =>{
             response.json()
@@ -103,6 +112,14 @@ export default {
             })
             .then(response => response.json())
                 .then (() => location.reload()) 
+        },
+        getNewGif(event){            
+            const gif = event.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(gif);
+            reader.onload = event => {
+                this.gifUrl = event.target.result;
+            }
         }         
     }  
 }
@@ -111,10 +128,6 @@ export default {
 </script>
 
 <style>
-
-.fas{
-    margin: 150px;
-}
 
 .box_flex_photo{
 width: 20%;
@@ -126,11 +139,6 @@ width: 20%;
     
 }
 
-.font_size{
-    font-size: 11px;
-}
-
-
 #bouton{
     display: none;
 }
@@ -141,7 +149,7 @@ width: 20%;
     background-color: #fd2d01;
     padding: 10px;
     font-weight: bolder;
-    font-size: 12px;
+    font-size: 14px;
     color: white;
     cursor: pointer;
 }

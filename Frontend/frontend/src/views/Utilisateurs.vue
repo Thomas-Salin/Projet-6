@@ -19,7 +19,7 @@
                         <img class="w-100 photo_utilisateur" src="/logo/omer.png" alt="photo_utilisateur">
                     </div>
                     <div class="flex w-75 align-self-center fw-bolder fs-5 m-0 p-0 ">
-                        <router-link :to="{ path: 'profil', query: {userId: `${user.id}`}}"><p class="m-0 font_size">{{ user.prenom }} {{ user.nom }}</p></router-link>
+                        <router-link :to="{ path: 'profil', query: {userId: `${user.id}`}}"><p class="m-0 fst-italic">{{ user.prenom }} {{ user.nom }}</p></router-link>
                     </div>
                 </div>
             </div>

@@ -18,13 +18,16 @@
                 <div class="card-body m-0">
                     <p class="text-center fs-4 fw-bold">{{ gif.titre }}</p>
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
-                        <div class="flex m-1 h-50 w-50">
-                            <img class="photo_utilisateur w-50 p-0 my-auto border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                        <div class="flex m-1">
+                            <img class="photo_utilisateur w-100 p-0 my-auto border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <router-link :to="{ path: 'profil', query: {userId: `${gif.utilisateurId}`}}"><p class="m-0 fs-6 fst-italic">{{ gif.prenom }} {{ gif.nom }}</p></router-link>
-                            <p class="m-0 fs-6">Le {{ gif.date }}</p>                                
+                            <p class="m-0">Le {{ gif.date }}</p>                                
                         </div>
+                    </div>
+                    <div class="align-self-center" v-show="gif.utilisateurId === visitor.id || visitor.admin === true">
+                        <bouton @click="deleteGif(`${gif.utilisateurId}`)" intitule="Supprimer"/>
                     </div>
                 </div>
             </div>
@@ -55,18 +58,20 @@
             <div class="card col12 col-md-6 mx-auto border border-dark">
                 <div class="card-body px-1 py-0">
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
-                        <div class="flex h-50 w-50 m-1">
-                            <img class="photo_utilisateur w-50 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                        <div class="flex m-1">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
-                            <p class="m-0 fs-6 fst-italic">{{ commentaire.prenom_commentaire }} {{ commentaire.nom_commentaire }}</p>
-                            <p class="m-0 fs-6">{{ commentaire.date_commentaire }}</p>
+                            <router-link :to="{ path: 'profil', query: {userId: `${commentaire.utilisateur_id}`}}"><p class="m-0 fst-italic">{{ commentaire.prenom_commentaire }} {{ commentaire.nom_commentaire }}</p></router-link>
+                            <p class="m-0">{{ commentaire.date_commentaire }}</p>
+                            
+                            
                         </div>
                     </div>
                     <div>
-                        <p class="fw-bold fs-6">"{{ commentaire.commentaire }}"</p>
+                        <p class="fw-bold">"{{ commentaire.commentaire }}"</p>
                     </div>
-                    <div class="text-center">
+                    <div class="text-center" v-show="commentaire.utilisateur_id === visitor.id || visitor.admin === true">
                         <bouton @click="deleteComment(`${commentaire.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -99,10 +104,16 @@ export default {
                 utilisateurId: 0,
             },
             comments: [],
+
             newComment: {
                     texte: "",
                     utilisateurId: parseInt(sessionStorage.userId),
                     gif: 0
+            },
+
+            visitor:{
+                id: parseInt(sessionStorage.getItem("userId")),
+                admin: false
             }
 
         }
@@ -166,8 +177,17 @@ export default {
                 console.log(erreur);
             })
         },
+
         deleteComment(commentId){
             fetch(`http://localhost:3000/api/commentaires/${commentId}`, {
+               method: 'DELETE',
+            })
+            .then(response => response.json())
+                .then (() => location.reload()) 
+        },
+
+        deleteGif(gifId){
+            fetch(`http://localhost:3000/api/gifs/${gifId}`, {
                method: 'DELETE',
             })
             .then(response => response.json())
@@ -179,9 +199,9 @@ export default {
 </script>
 
 <style>
-
-.font_size{
-    font-size: 11px;
+.photo_utilisateur{
+    object-fit: cover;
+    height: 60px;    
 }
-
 </style>
+

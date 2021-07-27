@@ -16,18 +16,18 @@
 
             <div class=" card col-12 col-md-6 border border-dark mx-auto my-3 justify-content-center">
                 <div class="align-self-center text-center my-3">
-                    <img class="w-50 border border-dark" src="/logo/2nix140800145.jpg" alt="photo_profil">
+                    <img class="w-50 border border-dark" :src="user.photoProfil" alt="photo_profil">
                 </div>
-                <div class="align-self-center">
-                    <bouton intitule="Modifier la photo de profil"/>
+                <div class="align-self-center" v-show="user.id === visitor.id">
+                    <input type="file" id="bouton" @change="getNewPhoto" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Modifier la photo de profil</label>
                 </div>
-                <div class="card-body text-center m-0 py-0">
-                    <p class="fw-bold fs-6 m-1">Prénom : {{ user.prenom }}</p>
-                    <p class="fw-bold fs-6 m-1">Nom: {{ user.nom }}</p>
-                    <p class="fw-bold fs-6 m-1">Email : {{ user.email }}</p>
-                    <p class="fw-bold fs-6 m-1">Incrit le {{ user.dateInscription }}</p>
+                <div class="card-body text-center my-1 py-0">
+                    <p class="fw-bold m-1">Prénom : {{ user.prenom }}</p>
+                    <p class="fw-bold m-1">Nom: {{ user.nom }}</p>
+                    <p class="fw-bold m-1">Email : {{ user.email }}</p>
+                    <p class="fw-bold m-1">Incrit le {{ user.dateInscription }}</p>
                 </div>
-                <div class="text-center my-1 p">
+                <div class="text-center my-1 p" v-show="user.id === visitor.id || visitor.admin === true">
                     <bouton @click="deleteUser(`${user.id}`)" intitule="Supprimer le compte"/>
                 </div>
             </div>
@@ -48,17 +48,17 @@
             <div class="card col12 col-md-6 mx-auto border border-dark p-0">
                 <div class="card-body px-1 py-0">
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
-                        <div class="flex h-50 w-50 m-1">
-                            <img class="photo_utilisateur w-50 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                        <div class="flex m-1">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
-                            <p class="m-0 fs-6"> Le {{ comment.date }}</p>
+                            <p class="m-0"> Le {{ comment.date }}</p>
                         </div>
                     </div>
                     <div>
-                        <p class="fw-bold fs-6">"{{ comment.commentaire }}"</p>
+                        <p class="fw-bold">"{{ comment.commentaire }}"</p>
                     </div>
-                    <div class="text-center">
+                    <div class="text-center" v-show="user.id === visitor.id || visitor.admin === true">
                         <bouton @click="deleteComment(`${comment.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -78,20 +78,20 @@
         <div v-for="gif in gifs" :key="gif.id"  class="row my-3">
 
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
-                <a class= "border border-dark mt-5 text-center -5 w-75 mx-auto" href="gifcomment.html"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></a>
+                <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ gif.titre }}</p>
                     <div class="d-flex text-align p-0 border border-dark rounded">
-                        <div class="flex m-1  w-50">
-                            <img class="photo_utilisateur w-50 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                        <div class="flex m-1">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
-                            <p class="m-0 fs-6 fst-italic">{{ user.prenom }} {{ user.nom }}</p>
-                            <p class="m-0 fs-6">{{ gif.date }}</p>
+                            <p class="m-0 fst-italic">{{ user.prenom }} {{ user.nom }}</p>
+                            <p class="m-0">{{ gif.date }}</p>
                         </div>
                     </div>
 
-                    <div class="text-center mt-3">
+                    <div class="text-center mt-3" v-show="user.id === visitor.id || visitor.admin === true">
                         <bouton @click="deleteGif(`${gif.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -120,7 +120,13 @@ export default {
             prenom: "",
             nom: "",
             email: "",
-            dateInscription: ""
+            dateInscription: "",
+            photoProfil: "/logo/2nix140800145.jpg"
+        },
+
+        visitor:{
+            id: parseInt(sessionStorage.getItem('userId')),
+            admin: false,
         },
 
         comments: [],
@@ -187,6 +193,15 @@ export default {
             .then(() => {
                 window.location.href = "http://localhost:8080/#/inscription";
             })
+        },
+
+        getNewPhoto(event){            
+            const gif = event.target.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(gif);
+            reader.onload = event => {
+                this.user.photoProfil = event.target.result;
+            }
         } 
     }
 }
@@ -196,6 +211,27 @@ export default {
 <style>
 .font-size{
     font-size: 11px
+}
+
+#fileupload{
+    border-radius: 15px;
+    border: 2px solid black;
+    background-color: #fd2d01;
+    padding: 10px;
+    font-weight: bolder;
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+}
+
+#bouton{
+    display: none;
+}
+
+.photo_utilisateur{
+    object-fit: cover;
+    height: 60px;
+    
 }
 
 

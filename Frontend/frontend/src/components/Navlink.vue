@@ -2,7 +2,7 @@
 
 <nav class="navbar navbar-expand-md navbar-light bg-success">
   <div class="container-fluid">
-    <a class="navbar-brand text-start w-75" href="#"><img class="logo" src="logo/icon-left-font.png" alt="logo_groupomania"></a>
+    <router-link class="navbar-brand text-start w-75" to="/accueil"><img class="logo" src="logo/icon-left-font.png" alt="logo_groupomania"></router-link>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -11,7 +11,7 @@
         <li class="nav-item">
           <router-link class="nav-link text-light" to="/utilisateurs">Utilisateurs</router-link>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" @click="reload()">
           <router-link class="nav-link text-light" :to="{ path: 'profil', query: { userId: id }}">Profil</router-link>
         </li>
         <li class="nav-item">
@@ -34,7 +34,12 @@ export default{
   },
   beforeMount(){
     this.id = sessionStorage.userId;
-  }
+  },
+  methods:{
+    reload(){
+      location.reload();
+    }
+  },
 }
 </script>
 

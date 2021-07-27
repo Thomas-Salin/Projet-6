@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Home from '../views/Home.vue'
+import Inscription from '../views/Inscription.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    name:'Inscription',
+    component: Inscription,
   },
   {
     path: '/about',
@@ -40,12 +40,6 @@ const routes = [
     name:'Utilisateurs',
     component: () => import(/* webpackChunkName: "about" */ '../views/Utilisateurs.vue')
   },
-  {
-    path:'/inscription',
-    name:'/Inscription',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Inscription.vue')
-
-  }
 ]
 
 const router = createRouter({
