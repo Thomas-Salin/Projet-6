@@ -26,7 +26,7 @@
                             <p class="m-0">Le {{ gif.date }}</p>                                
                         </div>
                     </div>
-                    <div class="align-self-center" v-show="gif.utilisateurId === visitor.id || visitor.admin === true">
+                    <div class="align-self-center" v-show="gif.utilisateurId === visitor.id || visitor.admin === 1">
                         <bouton @click="deleteGif(`${gif.utilisateurId}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                     <div>
                         <p class="fw-bold">"{{ commentaire.commentaire }}"</p>
                     </div>
-                    <div class="text-center" v-show="commentaire.utilisateur_id === visitor.id || visitor.admin === true">
+                    <div class="text-center" v-show="commentaire.utilisateur_id === visitor.id || visitor.admin === 1">
                         <bouton @click="deleteComment(`${commentaire.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -113,7 +113,7 @@ export default {
 
             visitor:{
                 id: parseInt(sessionStorage.getItem("userId")),
-                admin: false
+                admin: parseInt(sessionStorage.getItem('admin')),
             }
 
         }
@@ -122,8 +122,15 @@ export default {
         let url = window.location.href;
         let recupId = url.split('=');
         let gifId = recupId[1];
+        const token = sessionStorage.getItem('token');
 
-        fetch(`http://localhost:3000/api/gifs/${gifId}`)
+        fetch(`http://localhost:3000/api/gifs/${gifId}`, {
+            method: "GET",
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+token
+            }),
+        })
         .then(response =>{
             response.json()
             .then (data => {
@@ -138,7 +145,13 @@ export default {
             })
         })
 
-        fetch(`http://localhost:3000/api/commentaires/gif/${gifId}`)
+        fetch(`http://localhost:3000/api/commentaires/gif/${gifId}`,{
+            method: "GET",
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+token
+            }),
+        })
         .then(response => {
             response.json()
             .then (data => {
@@ -156,11 +169,14 @@ export default {
                 gifId: this.gif.id
             };
 
-            fetch('http://localhost:3000/api/commentaires', {
+            const token = sessionStorage.getItem('token');
+
+            fetch('http://localhost:3000/api/commentaires', {              
                 method: "POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+token
+                }),
                 body: JSON.stringify(newCommentaire)
                 })
             .then(response => {
@@ -179,8 +195,12 @@ export default {
         },
 
         deleteComment(commentId){
+            const token = sessionStorage.getItem('token');
             fetch(`http://localhost:3000/api/commentaires/${commentId}`, {
                method: 'DELETE',
+               headers: new Headers({
+                   'Authorization': 'Bearer '+token,
+               })
             })
             .then(response => response.json())
                 .then (() => location.reload()) 
@@ -188,8 +208,9 @@ export default {
 
         deleteGif(gifId){
             fetch(`http://localhost:3000/api/gifs/${gifId}`, {
-               method: 'DELETE',
-            })
+                method: 'DELETE',
+
+                })
             .then(response => response.json())
                 .then (() => location.reload()) 
         },  

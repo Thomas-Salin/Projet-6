@@ -17,16 +17,16 @@
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
                 <div class="card-body text-center p-3">
                     <div class="border border-dark w-75 text-center mx-auto my-2">
-                       <img id="newgif" class="w-100" :src="gifUrl"> 
+                       <img id="newgif" class="w-100" :src="gifFile"> 
                     </div>
                     <label for="titre_post">Titre</label><br>
-                    <input class="my-3" type="text" id="titre_post" name="titre_post"><br>
+                    <input class="my-3" type="text" id="titre_post" name="titre_post" v-model="newGif.titre"><br>
                     <div class="d-flex justify-content-around">
                         <div class="flex align-self-center">
-                            <bouton @click="createNewGif" intitule="Publier"/>
+                            <bouton @click="uploadNewGif()" intitule="Publier"/>
                         </div>
                         <div class="flex align-self-center">
-                            <input type="file" id="bouton" @change="getNewGif" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Choisir un gif</label>
+                            <input type="file" ref="file" id="bouton" @change="getNewGif" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Choisir un gif</label>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                         <div>
                             <bouton @click="commentGif(`${post.id}`)" intitule="Commenter"/>
                         </div>
-                        <div class="align-self-center" v-show="post.utilisateurId === visitor.id || visitor.admin === true">
+                        <div class="align-self-center" v-show="post.utilisateurId === visitor.id || visitor.admin === 1">
                             <bouton @click="deleteGif(`${post.id}`)" intitule="Supprimer"/>
                         </div>
                     </div>
@@ -84,17 +84,28 @@ export default {
     data: function(){
         return{
             posts: [],
-            gifUrl: "/logo/cloud-computing-1990405_640.png",
+            gifFile: "/logo/cloud-computing-1990405_640.png",
             visitor: {
                 id: parseInt(sessionStorage.getItem('userId')),
-                admin: false,
+                admin: parseInt(sessionStorage.getItem('admin')),
+            },
+            newGif: {
+                utilisateurId: parseInt(sessionStorage.getItem('userId')),
+                titre: "",
             }
             
         }
     },
     beforeMount(){
+        const token = sessionStorage.getItem('token');
 
-        fetch('http://localhost:3000/api/gifs')
+        fetch('http://localhost:3000/api/gifs',{
+            method: "GET",
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+token
+            }),
+        })
         .then(response =>{
             response.json()
             .then (data => {
@@ -118,9 +129,30 @@ export default {
             const reader = new FileReader();
             reader.readAsDataURL(gif);
             reader.onload = event => {
-                this.gifUrl = event.target.result;
+                this.gifFile = event.target.result;
             }
-        }         
+            this.gifFile = this.$refs.file.files;
+           
+        },
+
+        uploadNewGif(){
+            const formData = new FormData()
+            formData.append('utilisateurId', this.newGif.utilisateurId)
+            formData.append('titre', this.newGif.titre)
+            formData.append('image', this.gifFile)
+            
+            
+            fetch('http://localhost:3000/api/gifs', {
+                method: "POST",
+                body: formData
+            })
+            .then(response => {
+                response.json()
+                .then(data => {
+                    console.log(data);
+                })
+            })
+        }        
     }  
 }
 

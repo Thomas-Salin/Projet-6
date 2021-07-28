@@ -52,7 +52,7 @@ exports.login = (req, res, next) => {
                                     admin: Object.values(rows)[0].admin,
                                     userId: Object.values(rows)[0].id,
                                     token: jwt.sign(
-                                        { userId: req.body.id }, 
+                                        { userId: Object.values(rows)[0].id }, 
                                         'PLATES_CONTINUE_PRIME_LOCKER_MUSIC_COMPANY',
                                         { expiresIn: '24h' }       
                                     )

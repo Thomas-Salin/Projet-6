@@ -4,13 +4,13 @@ const auth = require('../middleware/auth');
 const router = express.Router();
 
 
-router.post('/', commentController.createComment);
+router.post('/', auth, commentController.createComment);
 
-router.get('/gif/:id', commentController.getGifComment);
+router.get('/gif/:id', auth, commentController.getGifComment);
 
-router.get('/user/:id',commentController.getCommentUser);
+router.get('/user/:id', auth, commentController.getCommentUser);
   
-router.delete('/:id',  commentController.deleteGifComment);
+router.delete('/:id', auth, commentController.deleteGifComment);
 
 
 module.exports = router;

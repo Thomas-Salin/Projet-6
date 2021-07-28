@@ -27,7 +27,7 @@
                     <p class="fw-bold m-1">Email : {{ user.email }}</p>
                     <p class="fw-bold m-1">Incrit le {{ user.dateInscription }}</p>
                 </div>
-                <div class="text-center my-1 p" v-show="user.id === visitor.id || visitor.admin === true">
+                <div class="text-center my-1 p" v-show="user.id === visitor.id || visitor.admin === 1">
                     <bouton @click="deleteUser(`${user.id}`)" intitule="Supprimer le compte"/>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     <div>
                         <p class="fw-bold">"{{ comment.commentaire }}"</p>
                     </div>
-                    <div class="text-center" v-show="user.id === visitor.id || visitor.admin === true">
+                    <div class="text-center" v-show="user.id === visitor.id || visitor.admin === 1">
                         <bouton @click="deleteComment(`${comment.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
                         </div>
                     </div>
 
-                    <div class="text-center mt-3" v-show="user.id === visitor.id || visitor.admin === true">
+                    <div class="text-center mt-3" v-show="user.id === visitor.id || visitor.admin === 1">
                         <bouton @click="deleteGif(`${gif.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
@@ -126,7 +126,7 @@ export default {
 
         visitor:{
             id: parseInt(sessionStorage.getItem('userId')),
-            admin: false,
+            admin: parseInt(sessionStorage.getItem('admin')),
         },
 
         comments: [],
@@ -138,6 +138,7 @@ export default {
       let url = window.location.href;
       let recupUserId = url.split("=");
       let userId = recupUserId[1];
+      const token = sessionStorage.getItem('token');
 
       fetch(`http://localhost:3000/api/users/${userId}`)
       .then (response => {
@@ -152,7 +153,13 @@ export default {
           })
       })
 
-    fetch(`http://localhost:3000/api/commentaires/user/${userId}`)
+    fetch(`http://localhost:3000/api/commentaires/user/${userId}`,{
+        method: "GET",
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+token
+        }),
+    })
     .then (response => {
         response.json()
         .then(data => {
@@ -160,7 +167,13 @@ export default {
         })
     })
 
-    fetch(`http://localhost:3000/api/gifs/user/${userId}`)
+    fetch(`http://localhost:3000/api/gifs/user/${userId}`, {
+        method: "GET",
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer '+token
+        }),
+    })
     .then( response => {
         response.json()
         .then(data => {

@@ -61,6 +61,7 @@ export default {
                     if (response.ok === true){
                         response.json()
                         .then(data => {
+                            sessionStorage.setItem('admin', `${data.admin}`);
                             sessionStorage.setItem('userId', `${data.userId}`);
                             sessionStorage.setItem('token', `${data.token}`);
                             window.location.href = "http://localhost:8080/#/accueil";

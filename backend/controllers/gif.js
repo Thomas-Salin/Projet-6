@@ -3,12 +3,12 @@ const fs = require('fs');
 
 
 exports.createGif =  (req, res, next) => {
-
-    const gifObject = JSON.parse(req.body.gif)
+    const gifUtilisateurId = JSON.parse(req.body.utilisateurId);
+    const gifTitre = req.body.titre;
     const gif = new Gif({
       gifUrl: `${req.protocol}://${req.get('host')}/gifs/${req.file.filename}`,
-      utilisateurId: gifObject.utilisateurId,
-      titre: gifObject.titre
+      utilisateurId: gifUtilisateurId,
+      titre: gifTitre,
     });
     gif.add()
         .then ( ([rows,fields]) => {

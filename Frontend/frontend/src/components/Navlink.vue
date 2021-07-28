@@ -15,7 +15,7 @@
           <router-link class="nav-link text-light" :to="{ path: 'profil', query: { userId: id }}">Profil</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link text-light" to="/connexion">Deconnexion</router-link>
+          <router-link class="nav-link text-light" @click="sessionStorageClear()" to="/connexion">Deconnexion</router-link>
         </li>
       </ul>
     </div>
@@ -38,6 +38,9 @@ export default{
   methods:{
     reload(){
       location.reload();
+    },
+    sessionStorageClear(){
+      sessionStorage.clear()
     }
   },
 }
