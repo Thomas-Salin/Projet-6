@@ -17,7 +17,7 @@
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
                 <div class="card-body text-center p-3">
                     <div class="border border-dark w-75 text-center mx-auto my-2">
-                       <img id="newgif" class="w-100" :src="gifFile"> 
+                       <img id="newgif" class="w-100 photo_gif" :src="gifFile"> 
                     </div>
                     <label for="titre_post">Titre</label><br>
                     <input class="my-3" type="text" id="titre_post" name="titre_post" v-model="newGif.titre"><br>
@@ -41,12 +41,12 @@
         <div class="row">
             
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
-                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
+                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100 photo_gif" :src="post.gif_url" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ post.titre }}</p>
                    <div class="d-flex text-align p-0 border border-dark rounded">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="post.photo_profil" alt="photo_profil">
                         </div>
                         <div class=" flex w-100 align-self-center">
                             <router-link :to="{ path: 'profil', query: {userId: `${post.utilisateurId}`}}"><p class="m-0 fst-italic">{{ post.prenom }} {{ post.nom }}</p></router-link>
@@ -92,6 +92,7 @@ export default {
             newGif: {
                 utilisateurId: parseInt(sessionStorage.getItem('userId')),
                 titre: "",
+                gifFile: null
             }
             
         }
@@ -117,40 +118,47 @@ export default {
         commentGif(gifId){
            router.push({ path: 'post', query: { gifId: gifId }}); 
         },
+        
         deleteGif(gifId){
+            const token = sessionStorage.getItem('token');
+
             fetch(`http://localhost:3000/api/gifs/${gifId}`, {
                method: 'DELETE',
+                headers: new Headers({
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer '+token
+            }),
             })
             .then(response => response.json())
                 .then (() => location.reload()) 
         },
+
         getNewGif(event){            
             const gif = event.target.files[0];
+            this.newGif.gifFile = event.target.files[0];
             const reader = new FileReader();
             reader.readAsDataURL(gif);
             reader.onload = event => {
                 this.gifFile = event.target.result;
-            }
-            this.gifFile = this.$refs.file.files;
-           
+            }       
         },
 
         uploadNewGif(){
-            const formData = new FormData()
-            formData.append('utilisateurId', this.newGif.utilisateurId)
-            formData.append('titre', this.newGif.titre)
-            formData.append('image', this.gifFile)
+
+            const newGif = new FormData()
+            newGif.append('utilisateurId', this.newGif.utilisateurId)
+            newGif.append('titre', this.newGif.titre)
+            newGif.append('myGif', this.newGif.gifFile)
             
             
             fetch('http://localhost:3000/api/gifs', {
                 method: "POST",
-                body: formData
+                body: newGif
             })
             .then(response => {
                 response.json()
-                .then(data => {
-                    console.log(data);
-                })
+                .then( () => location.reload())
+    
             })
         }        
     }  
@@ -161,14 +169,15 @@ export default {
 
 <style>
 
-.box_flex_photo{
-width: 20%;
-}
 
 .photo_utilisateur{
-    object-fit: cover;
-    height: 60px;
-    
+    object-fit: contain;
+    height: 60px;  
+}
+
+photo_gif{
+    object-fit: contain;
+    height: 300px;
 }
 
 #bouton{

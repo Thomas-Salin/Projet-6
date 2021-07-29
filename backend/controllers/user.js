@@ -91,7 +91,8 @@ exports.getOneUser = (req, res, next) => {
 
 exports.modifyUser = (req, res, next ) => {
     const user = new User()
-    const photoUser = JSON.parse(req.body.photo_profil);
+    const photoUser = `${req.protocol}://${req.get('host')}/photos/${req.file.filename}`;
+    console.log(photoUser);
 
     user.updateOne(req.params.id, photoUser)
         .then(([rows, fields]) => {
@@ -100,14 +101,42 @@ exports.modifyUser = (req, res, next ) => {
         .catch(() => res.status(400).json({erreur: "Connexion au serveur impossible"}))
 };
 
+exports.modifyAdminUser = (req, res, next ) => {
+    const user = new User()
+    const admin = "1";
+
+    user.updateAdmin(req.params.id, admin)
+        .then(([rows, fields]) => {
+            res.status(200).json({message: "Droit mis à jour"})
+        })
+        .catch(() => res.status(400).json({erreur: "Connexion au serveur impossible"}))
+};
+
+exports.modifyNoAdminUser = (req, res, next ) => {
+    const user = new User()
+    const admin = "0";
+
+    user.updateNoAdmin(req.params.id, admin)
+        .then(([rows, fields]) => {
+            res.status(200).json({message: "Droit mis à jour"})
+        })
+        .catch(() => res.status(400).json({erreur: "Connexion au serveur impossible"}))
+};
+
 exports.deleteUser = (req, res, next) => {
 
     let user = new User();
 
-
+    user.find(req.params.id)
+    .then (([rows, fields]) =>{
+        const photoUser = Object.values(rows)[0].photo_profil;
+        const filename = photoUser.split('/photos/')[1];
+        fs.unlink(`photos/${filename}`, () => {
         user.deleteOne(req.params.id)
             .then( ([rows,field]) =>{
               res.status(200).json({message: "Utilisateur supprimé"})
             })
             .catch( () => {res.status(500).json({erreur: "Connexion au serveur impossible"})});
+        })
+    })
 };

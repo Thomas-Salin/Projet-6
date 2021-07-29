@@ -14,12 +14,12 @@
         <div class="row">
             
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
-                <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
+                <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" :src="gif.gif_url" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                     <p class="text-center fs-4 fw-bold">{{ gif.titre }}</p>
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 my-auto border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                            <img class="photo_utilisateur w-100 p-0 my-auto border border-dark rounded" :src="gif.photo_profil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <router-link :to="{ path: 'profil', query: {userId: `${gif.utilisateurId}`}}"><p class="m-0 fs-6 fst-italic">{{ gif.prenom }} {{ gif.nom }}</p></router-link>
@@ -27,7 +27,7 @@
                         </div>
                     </div>
                     <div class="align-self-center" v-show="gif.utilisateurId === visitor.id || visitor.admin === 1">
-                        <bouton @click="deleteGif(`${gif.utilisateurId}`)" intitule="Supprimer"/>
+                        <bouton @click="deleteGif(`${gif.id}`)" intitule="Supprimer"/>
                     </div>
                 </div>
             </div>
@@ -59,7 +59,7 @@
                 <div class="card-body px-1 py-0">
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="commentaire.photo_profil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <router-link :to="{ path: 'profil', query: {userId: `${commentaire.utilisateur_id}`}}"><p class="m-0 fst-italic">{{ commentaire.prenom_commentaire }} {{ commentaire.nom_commentaire }}</p></router-link>
@@ -207,12 +207,17 @@ export default {
         },
 
         deleteGif(gifId){
+            const token = sessionStorage.getItem('token');
+
             fetch(`http://localhost:3000/api/gifs/${gifId}`, {
                 method: 'DELETE',
+                headers: new Headers({
+                   'Authorization': 'Bearer '+token,
+                })
 
                 })
             .then(response => response.json())
-                .then (() => location.reload()) 
+                .then (() => window.location.href = 'http://localhost:8080/#/accueil') 
         },  
     }
 }

@@ -11,9 +11,9 @@ router.get('/', auth, gifController.getAllGif);
 
 router.get('/:id', auth, gifController.getOneGif);
 
-router.get('/user/:id', auth, gifController.getGifUser);
+router.get('/user/:id', auth,  gifController.getGifUser);
 
-router.delete('/:id', gifController.deleteGif)
+router.delete('/:id', auth, gifController.deleteGif)
 
 
 module.exports = router;

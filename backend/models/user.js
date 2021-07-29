@@ -16,7 +16,7 @@ class User {
         this.password = user.password;
     }
     add(){
-       return connection.promise().query(`INSERT INTO Utilisateur (prenom, nom, email, mot_de_passe, date_inscription, admin) VALUES (?, ?, ?, ?, NOW(),"0")`, [this.prenom, this.nom, this.email, this.password])
+       return connection.promise().query(`INSERT INTO Utilisateur (prenom, nom, email, mot_de_passe, date_inscription, photo_profil, admin) VALUES (?, ?, ?, ?, NOW(), "/photos/2nix140800145.jpg", "0")`, [this.prenom, this.nom, this.email, this.password])
     }    
     findOne(email){
         return connection.promise().query(`SELECT id, email, mot_de_passe, DATE_FORMAT(date_inscription, '%e/%c/%Y à %kh%i') AS date_inscription, photo_profil, admin FROM Utilisateur WHERE email = ?`, [email])
@@ -25,10 +25,16 @@ class User {
         return connection.promise().query(`SELECT id, prenom, nom, email, DATE_FORMAT(date_inscription, '%e/%c/%Y à %kh%i') AS date_inscription, photo_profil FROM Utilisateur`)
     }
     find(id){
-        return connection.promise().query(`SELECT id, prenom, nom, email, DATE_FORMAT(date_inscription, '%e/%c/%Y à %kh%i') AS date_inscription, photo_profil FROM Utilisateur WHERE id = ?`, [id])
+        return connection.promise().query(`SELECT id, prenom, nom, email, DATE_FORMAT(date_inscription, '%e/%c/%Y à %kh%i') AS date_inscription, photo_profil, admin FROM Utilisateur WHERE id = ?`, [id])
     }
     updateOne(id, photo){
         return connection.promise().query(`UPDATE Utilisateur SET photo_profil = ? WHERE id = ?`, [photo, id])
+    }
+    updateAdmin(id, admin){
+        return connection.promise().query(`UPDATE Utilisateur SET admin = ? WHERE id = ?`, [admin, id])
+    }
+    updateNoAdmin(id, admin){
+        return connection.promise().query(`UPDATE Utilisateur SET admin = ? WHERE id = ?`, [admin, id])
     }
     deleteOne(id){
         return connection.promise().query(`DELETE FROM Utilisateur WHERE id = ?`, [id] )

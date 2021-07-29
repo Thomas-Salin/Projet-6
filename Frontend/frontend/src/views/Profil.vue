@@ -15,8 +15,8 @@
         <div class="row">
 
             <div class=" card col-12 col-md-6 border border-dark mx-auto my-3 justify-content-center">
-                <div class="align-self-center text-center my-3">
-                    <img class="w-50 border border-dark" :src="user.photoProfil" alt="photo_profil">
+                <div class="align-self-center text-center my-3 w-50">
+                    <img class=" w-100 border border-dark photo_profil" :src="user.photoProfil" alt="photo_profil">
                 </div>
                 <div class="align-self-center" v-show="user.id === visitor.id">
                     <input type="file" id="bouton" @change="getNewPhoto" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Modifier la photo de profil</label>
@@ -24,11 +24,17 @@
                 <div class="card-body text-center my-1 py-0">
                     <p class="fw-bold m-1">Prénom : {{ user.prenom }}</p>
                     <p class="fw-bold m-1">Nom: {{ user.nom }}</p>
-                    <p class="fw-bold m-1">Email : {{ user.email }}</p>
+                    <p class="fw-bold m-1">Email : {{ user.email}}</p>
                     <p class="fw-bold m-1">Incrit le {{ user.dateInscription }}</p>
                 </div>
                 <div class="text-center my-1 p" v-show="user.id === visitor.id || visitor.admin === 1">
                     <bouton @click="deleteUser(`${user.id}`)" intitule="Supprimer le compte"/>
+                </div>
+                <div class="text-center my-1 p" v-show="user.admin == 0 && visitor.admin === 1">
+                    <bouton @click="updateAdminUser(`${user.id}`)" intitule="Donner les droits admins"/>
+                </div>
+                <div class="text-center my-1 p" v-show=" user.admin == 1 && visitor.admin === 1">
+                    <bouton @click="updateNoAdminUser(`${user.id}`)" intitule="Supprimer les droits admins"/>
                 </div>
             </div>
         </div>
@@ -49,7 +55,7 @@
                 <div class="card-body px-1 py-0">
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="user.photoProfil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <p class="m-0"> Le {{ comment.date }}</p>
@@ -78,12 +84,12 @@
         <div v-for="gif in gifs" :key="gif.id"  class="row my-3">
 
             <div class="card col-12 col-md-6 mx-auto border border-secondary">
-                <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" src="/logo/Zelda-Top10-35ans.jpg" alt="photo_gif"></router-link>
+                <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100 photo_gif" :src="gif.gif_url" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ gif.titre }}</p>
                     <div class="d-flex text-align p-0 border border-dark rounded">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" src="/logo/omer.png" alt="photo_profil">
+                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="user.photoProfil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <p class="m-0 fst-italic">{{ user.prenom }} {{ user.nom }}</p>
@@ -121,7 +127,8 @@ export default {
             nom: "",
             email: "",
             dateInscription: "",
-            photoProfil: "/logo/2nix140800145.jpg"
+            photoProfil: "",
+            newPhotoProfil: null,
         },
 
         visitor:{
@@ -149,7 +156,8 @@ export default {
             this.user.nom = data.response[0].nom;
             this.user.email = data.response[0].email;
             this.user.dateInscription = data.response[0].date_inscription;
-            this.user.photo = data.response[0].photo_profil;  
+            this.user.photoProfil = data.response[0].photo_profil;
+            this.user.admin =  data.response[0].admin;
           })
       })
 
@@ -182,17 +190,58 @@ export default {
     })
   },
   methods: {
+        
+        updateNoAdminUser(userId){
+
+            const token = sessionStorage.getItem('token');
+
+            fetch(`http://localhost:3000/api/users/${userId}/user_noadmin`, {
+                method: "PUT",
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+token
+                }),
+            })
+            .then(() => location.reload());
+
+        },
+
+        updateAdminUser(userId){
+            const token = sessionStorage.getItem('token');
+
+            fetch(`http://localhost:3000/api/users/${userId}/user_admin`, {
+                method: "PUT",
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+token
+                }),
+            })
+            .then(() => location.reload());
+        },
+
         deleteGif(gifId){
+            const token = sessionStorage.getItem('token');
             fetch(`http://localhost:3000/api/gifs/${gifId}`, {
-               method: 'DELETE',
+                method: 'DELETE',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+token
+                }),
             })
             .then(response => response.json())
                 .then (() => location.reload()) 
         }, 
 
         deleteComment(commentId){
+
+            const token = sessionStorage.getItem('token');
+
             fetch(`http://localhost:3000/api/commentaires/${commentId}`, {
                method: 'DELETE',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer '+token
+                }),
             })
             .then(response => response.json())
                 .then (() => location.reload()) 
@@ -204,17 +253,27 @@ export default {
             })
             .then(response => response.json())
             .then(() => {
-                window.location.href = "http://localhost:8080/#/inscription";
+                window.location.href = "http://localhost:8080/#/";
             })
         },
 
         getNewPhoto(event){            
-            const gif = event.target.files[0];
+            const photo = event.target.files[0];
             const reader = new FileReader();
-            reader.readAsDataURL(gif);
+            reader.readAsDataURL(photo);
             reader.onload = event => {
                 this.user.photoProfil = event.target.result;
             }
+
+            this.user.newPhotoProfil = event.target.files[0]
+            const newPhoto = new FormData();
+            newPhoto.append('photoProfil', this.user.newPhotoProfil)
+
+            fetch(`http://localhost:3000/api/users/${this.user.id}/photo_profil`, {
+                method: "PUT",
+                body: newPhoto
+            })
+            .then(() => location.reload());
         } 
     }
 }
@@ -245,6 +304,16 @@ export default {
     object-fit: cover;
     height: 60px;
     
+}
+
+photo_gif{
+    object-fit: contain;
+    height: 300px;
+}
+
+.photo_profil{
+    object-fit: cover;
+    height: 300px
 }
 
 

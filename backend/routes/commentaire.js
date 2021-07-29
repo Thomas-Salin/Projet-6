@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/', auth, commentController.createComment);
 
-router.get('/gif/:id', auth, commentController.getGifComment);
+router.get('/gif/:id', auth,  commentController.getGifComment);
 
 router.get('/user/:id', auth, commentController.getCommentUser);
   

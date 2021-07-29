@@ -3,6 +3,7 @@ const fs = require('fs');
 
 
 exports.createGif =  (req, res, next) => {
+    
     const gifUtilisateurId = JSON.parse(req.body.utilisateurId);
     const gifTitre = req.body.titre;
     const gif = new Gif({
@@ -68,12 +69,18 @@ exports.deleteGif = (req, res, next) => {
 
     let gif = new Gif();
 
-          gif.deleteOne(req.params.id)
+    gif.findOne(req.params.id)
+    .then (([rows, fields]) =>{
+        const gifUrl = Object.values(rows)[0].gif_url;
+        const filename = gifUrl.split('/gifs/')[1];
+        fs.unlink(`gifs/${filename}`, () => {
+        gif.deleteOne(req.params.id)
             .then( ([rows,field]) =>{
-              res.status(200).json({message: "Gif supprimé"})
+              res.status(200).json({message: "gif supprimé"})
             })
-            .catch( () => {res.status(500).json({erreur: "Connexion au serveur impossible"})})
-      .catch( () => res.status(500).json({erreur:"Connexion au serveur impossible"}));
+            .catch( () => {res.status(500).json({erreur: "Connexion au serveur impossible"})});
+        })
+    })
 };
 
 
