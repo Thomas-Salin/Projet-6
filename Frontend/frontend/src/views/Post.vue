@@ -13,16 +13,16 @@
 
         <div class="row">
             
-            <div class="card col-12 col-md-6 mx-auto border border-secondary">
+            <div class="card col-12 col-md-6 mx-auto border-2 colorgroupomania">
                 <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100" :src="gif.gif_url" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                     <p class="text-center fs-4 fw-bold">{{ gif.titre }}</p>
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 my-auto border border-dark rounded" :src="gif.photo_profil" alt="photo_profil">
+                            <img class="photo_utilisateur p-0 my-auto border border-dark rounded" :src="gif.photo_profil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
-                            <router-link :to="{ path: 'profil', query: {userId: `${gif.utilisateurId}`}}"><p class="m-0 fs-6 fst-italic">{{ gif.prenom }} {{ gif.nom }}</p></router-link>
+                            <router-link class="link" :to="{ path: 'profil', query: {userId: `${gif.utilisateurId}`}}"><p class="m-0 fs-6 fst-italic">{{ gif.prenom }} {{ gif.nom }}</p></router-link>
                             <p class="m-0">Le {{ gif.date }}</p>                                
                         </div>
                     </div>
@@ -45,24 +45,24 @@
         </div>
 
         <div class="row my-3">
-            <div class="card col-12 col-md-6 mx-auto border border-dark">
+            <div class="card col-12 col-md-6 mx-auto border-2 colorgroupomania">
                 <div class="card-body ">
                     <label for="commentaire">Votre commentaire : </label><br>
                     <textarea class="w-100" name="commentaire" id="commentaire" cols="60" rows="4" v-model="newComment.texte">Ecrivez votre commentaire</textarea><br>
-                    <button @click="createNewComment()" class="my-3 params_button" type="submit">Publier</button>
+                    <bouton @click="createNewComment()"  intitule="Publier"/>
                 </div>
             </div>
         </div>
 
         <div v-for="commentaire in comments" :key="commentaire.id" class="row my-3">
-            <div class="card col12 col-md-6 mx-auto border border-dark">
+            <div class="card col12 col-md-6 mx-auto border-2 colorgroupomania">
                 <div class="card-body px-1 py-0">
                     <div class="d-flex text-align p-0 border border-dark rounded my-3">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="commentaire.photo_profil" alt="photo_profil">
+                            <img class="photo_utilisateur p-0 m-0 border border-dark rounded" :src="commentaire.photo_profil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
-                            <router-link :to="{ path: 'profil', query: {userId: `${commentaire.utilisateur_id}`}}"><p class="m-0 fst-italic">{{ commentaire.prenom_commentaire }} {{ commentaire.nom_commentaire }}</p></router-link>
+                            <router-link class="link" :to="{ path: 'profil', query: {userId: `${commentaire.utilisateur_id}`}}"><p class="m-0 fst-italic">{{ commentaire.prenom_commentaire }} {{ commentaire.nom_commentaire }}</p></router-link>
                             <p class="m-0">{{ commentaire.date_commentaire }}</p>
                             
                             
@@ -226,8 +226,21 @@ export default {
 
 <style>
 .photo_utilisateur{
-    object-fit: cover;
-    height: 60px;    
+    object-fit: contain;
+    height: 60px; 
+    width: 60px;  
 }
+
+.colorgroupomania{
+    border-color: #fd2d01;
+}
+
+
+.link{
+    text-decoration: none;
+    color: #fd2d01;
+}
+
+
 </style>
 

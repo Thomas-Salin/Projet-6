@@ -14,7 +14,7 @@
 
         <div class="row">
 
-            <div class="card col-12 col-md-6 mx-auto border border-secondary">
+            <div class=" shadow-lg my-5 card col-12 col-md-6 border-2 mx-auto colorgroupomania">
                 <div class="card-body text-center p-3">
                     <div class="border border-dark w-75 text-center mx-auto my-2">
                        <img id="newgif" class="w-100 photo_gif" :src="gifFile"> 
@@ -26,7 +26,7 @@
                             <bouton @click="uploadNewGif()" intitule="Publier"/>
                         </div>
                         <div class="flex align-self-center">
-                            <input type="file" ref="file" id="bouton" @change="getNewGif" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Choisir un gif</label>
+                            <input type="file" ref="file" id="bouton" @change="getNewGif" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload" >Choisir un gif</label>
                         </div>
                     </div>
                 </div>
@@ -40,16 +40,16 @@
 
         <div class="row">
             
-            <div class="card col-12 col-md-6 mx-auto border border-secondary">
+            <div class="shadow-lg my-5 card col-12 col-md-6 mx-auto border-2 colorgroupomania">
                 <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100 photo_gif" :src="post.gif_url" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ post.titre }}</p>
                    <div class="d-flex text-align p-0 border border-dark rounded">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="post.photo_profil" alt="photo_profil">
+                            <img class="photo_utilisateur  p-0 m-0 border border-dark rounded" :src="post.photo_profil" alt="photo_profil">
                         </div>
                         <div class=" flex w-100 align-self-center">
-                            <router-link :to="{ path: 'profil', query: {userId: `${post.utilisateurId}`}}"><p class="m-0 fst-italic">{{ post.prenom }} {{ post.nom }}</p></router-link>
+                            <router-link class="link" :to="{ path: 'profil', query: {userId: `${post.utilisateurId}`}}"><p class=" colorgroupomanialink m-0 fst-italic">{{ post.prenom }} {{ post.nom }}</p></router-link>
                             <p class="m-0">le {{ post.date }}</p>
                         </div>
                    </div>
@@ -172,7 +172,8 @@ export default {
 
 .photo_utilisateur{
     object-fit: contain;
-    height: 60px;  
+    height: 60px; 
+    width: 60px 
 }
 
 photo_gif{
@@ -193,6 +194,28 @@ photo_gif{
     font-size: 14px;
     color: white;
     cursor: pointer;
+    transition: 300ms ease-in-out;
+    
+}
+
+#fileupload:hover{
+    transition: 300ms ease-in-out;
+    transform: scale(1.1);
+}
+
+.colorgroupomania{
+  border-color: #fd2d01;
+
+}
+
+.link{
+    text-decoration: none;
+    color: #fd2d01;
+}
+
+.effet:hover{
+    transform: scale(1.1);
+    transition: 300ms ease-in-out;
 }
 
 

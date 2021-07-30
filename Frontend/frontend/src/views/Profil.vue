@@ -14,12 +14,12 @@
 
         <div class="row">
 
-            <div class=" card col-12 col-md-6 border border-dark mx-auto my-3 justify-content-center">
-                <div class="align-self-center text-center my-3 w-50">
-                    <img class=" w-100 border border-dark photo_profil" :src="user.photoProfil" alt="photo_profil">
+            <div class=" shadow-lg my-5 card col-12 col-md-6 border-2 colorgroupomania rounded mx-auto my-3 justify-content-center">
+                <div class="align-self-center text-center my-3 w-100">
+                    <img class="colorborder border border-dark rounded photo_profil" :src="user.photoProfil" alt="photo_profil">
                 </div>
                 <div class="align-self-center" v-show="user.id === visitor.id">
-                    <input type="file" id="bouton" @change="getNewPhoto" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Modifier la photo de profil</label>
+                    <input type="file" class="effet" id="bouton" @change="getNewPhoto" accept="image/png, image/jpeg, image/jpg, image/gif"><label for="bouton" id="fileupload">Modifier la photo de profil</label>
                 </div>
                 <div class="card-body text-center my-1 py-0">
                     <p class="fw-bold m-1">Prénom : {{ user.prenom }}</p>
@@ -27,13 +27,13 @@
                     <p class="fw-bold m-1">Email : {{ user.email}}</p>
                     <p class="fw-bold m-1">Incrit le {{ user.dateInscription }}</p>
                 </div>
-                <div class="text-center my-1 p" v-show="user.id === visitor.id || visitor.admin === 1">
+                <div class="text-center my-1" v-show="user.id === visitor.id || visitor.admin === 1">
                     <bouton @click="deleteUser(`${user.id}`)" intitule="Supprimer le compte"/>
                 </div>
-                <div class="text-center my-1 p" v-show="user.admin == 0 && visitor.admin === 1">
+                <div class="text-center my-1" v-show="user.admin == 0 && visitor.admin === 1">
                     <bouton @click="updateAdminUser(`${user.id}`)" intitule="Donner les droits admins"/>
                 </div>
-                <div class="text-center my-1 p" v-show=" user.admin == 1 && visitor.admin === 1">
+                <div class="text-center my-1" v-show="user.admin == 1 && visitor.admin === 1">
                     <bouton @click="updateNoAdminUser(`${user.id}`)" intitule="Supprimer les droits admins"/>
                 </div>
             </div>
@@ -51,11 +51,11 @@
 
         <div v-for="comment in comments" :key="comment.id" class="row my-3">
 
-            <div class="card col12 col-md-6 mx-auto border border-dark p-0">
-                <div class="card-body px-1 py-0">
-                    <div class="d-flex text-align p-0 border border-dark rounded my-3">
+            <div class=" shadow-lg my-5 card col12 col-md-6 mx-auto border-2 colorgroupomania p-0">
+                <div class="card-body py-0">
+                    <div class="d-flex text-align p-0 border border-dark rounded shadow mt-3 mb-5">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="user.photoProfil" alt="photo_profil">
+                            <img class="photo_utilisateur p-0 m-0 border border-dark rounded" :src="user.photoProfil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <p class="m-0"> Le {{ comment.date }}</p>
@@ -83,13 +83,13 @@
 
         <div v-for="gif in gifs" :key="gif.id"  class="row my-3">
 
-            <div class="card col-12 col-md-6 mx-auto border border-secondary">
+            <div class=" shadow-lg my-5 p-3 card col-12 col-md-6 mx-auto border-2 colorgroupomania">
                 <router-link :to="{ path: 'post', query: {gifId: `${gif.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100 photo_gif" :src="gif.gif_url" alt="photo_gif"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ gif.titre }}</p>
-                    <div class="d-flex text-align p-0 border border-dark rounded">
+                    <div class="d-flex text-align p-0 border border-dark rounded shadow mb-5 colorgroupomania">
                         <div class="flex m-1">
-                            <img class="photo_utilisateur w-100 p-0 m-0 border border-dark rounded" :src="user.photoProfil" alt="photo_profil">
+                            <img class="photo_utilisateur  p-0 m-0 border border-dark rounded" :src="user.photoProfil" alt="photo_profil">
                         </div>
                         <div class="w-100 align-self-center">
                             <p class="m-0 fst-italic">{{ user.prenom }} {{ user.nom }}</p>
@@ -129,6 +129,7 @@ export default {
             dateInscription: "",
             photoProfil: "",
             newPhotoProfil: null,
+            admin: ""
         },
 
         visitor:{
@@ -207,7 +208,7 @@ export default {
         },
 
         updateAdminUser(userId){
-            const token = sessionStorage.getItem('token');
+            const token = sessionStorage.getItem('token'); 
 
             fetch(`http://localhost:3000/api/users/${userId}/user_admin`, {
                 method: "PUT",
@@ -294,15 +295,22 @@ export default {
     font-size: 14px;
     color: white;
     cursor: pointer;
+    transition: 300ms ease-in-out;
 }
 
+#fileupload:hover{
+    transition: 300ms ease-in-out;
+    transform: scale(1.1);
+}
 #bouton{
     display: none;
 }
 
 .photo_utilisateur{
-    object-fit: cover;
+    object-fit: contain;
     height: 60px;
+    width: 60px;
+   
     
 }
 
@@ -312,8 +320,27 @@ photo_gif{
 }
 
 .photo_profil{
-    object-fit: cover;
-    height: 300px
+    object-fit: contain;
+    height: 250px;
+    width: 250px;
+    
+}
+
+.colorgroupomania{
+    border-color: #fd2d01;
+}
+
+.link{
+    text-decoration: none;
+    color: #fd2d01;
+}
+
+.effet{
+    transition: 300ms ease-in-out;
+}
+.effet:hover{
+    transform: scale(1.1);
+    transition: 300ms ease-in-out;
 }
 
 
