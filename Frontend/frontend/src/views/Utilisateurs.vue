@@ -65,6 +65,9 @@ export default {
  
 }
 
+.effet{
+    transition: 300ms ease-in-out;
+}
 .effet:hover{
     transform: scale(1.1);
     transition: 300ms ease-in-out;

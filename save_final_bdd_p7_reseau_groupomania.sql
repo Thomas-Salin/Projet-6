@@ -16,14 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `reseau_groupomania`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `reseau_groupomania` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-USE `reseau_groupomania`;
-
---
 -- Table structure for table `commentaire`
 --
 
@@ -37,11 +29,11 @@ CREATE TABLE `commentaire` (
   `gif_id` mediumint unsigned NOT NULL,
   `date_heure_publication` datetime NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_cutilisateur_id` (`utilisateur_id`),
   KEY `fk_gif_id` (`gif_id`),
-  CONSTRAINT `fk_cutilisateur_id` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`),
+  KEY `fk_cutilisateur_id` (`utilisateur_id`),
+  CONSTRAINT `fk_cutilisateur_id` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_gif_id` FOREIGN KEY (`gif_id`) REFERENCES `gif` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,7 +42,7 @@ CREATE TABLE `commentaire` (
 
 LOCK TABLES `commentaire` WRITE;
 /*!40000 ALTER TABLE `commentaire` DISABLE KEYS */;
-INSERT INTO `commentaire` VALUES (11,'http',3,65,'2021-07-14 16:09:27'),(20,'coucou',5,68,'2021-07-16 10:08:01');
+INSERT INTO `commentaire` VALUES (78,'Joyeux anniversaire !!!! ',182,116,'2021-07-30 15:07:06'),(79,'Bienvenue à toi Thomas ',176,116,'2021-07-30 15:39:57'),(80,'Coucou Omer',176,120,'2021-07-30 17:12:39');
 /*!40000 ALTER TABLE `commentaire` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -69,8 +61,8 @@ CREATE TABLE `gif` (
   `titre` varchar(254) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_utilisateur_id` (`utilisateur_id`),
-  CONSTRAINT `fk_utilisateur_id` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb3;
+  CONSTRAINT `fk_utilisateur_id` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateur` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,7 +71,7 @@ CREATE TABLE `gif` (
 
 LOCK TABLES `gif` WRITE;
 /*!40000 ALTER TABLE `gif` DISABLE KEYS */;
-INSERT INTO `gif` VALUES (56,'http://localhost',3,'2021-07-13 20:32:54','gif test'),(59,'http://localhost',2,'2021-07-13 20:34:26','gif test4'),(62,'http',2,'2021-07-14 11:08:59','00001'),(65,'http',4,'2021-07-14 16:07:23','bonjour'),(66,'00004',4,'2021-07-14 17:02:22','super'),(67,'00004',4,'2021-07-14 17:03:02','super'),(68,'http',3,'2021-07-15 11:48:32','titre');
+INSERT INTO `gif` VALUES (116,'http://localhost:3000/gifs/Zelda-Top10-35ans.jpg1627571921427.jpg',181,'2021-07-29 17:18:41','Les 35 ans de Zelda '),(119,'http://localhost:3000/gifs/tenor.gif1627650326777.gif',182,'2021-07-30 15:05:26','Coucou !!!'),(120,'http://localhost:3000/gifs/omer.png1627652927224.png',176,'2021-07-30 15:48:47','Oh punaise !!!!!');
 /*!40000 ALTER TABLE `gif` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -96,9 +88,12 @@ CREATE TABLE `utilisateur` (
   `nom` varchar(60) NOT NULL,
   `email` varchar(254) NOT NULL,
   `mot_de_passe` varchar(254) NOT NULL,
+  `date_inscription` datetime NOT NULL,
+  `photo_profil` text,
+  `admin` enum('0','1') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ind_email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=183 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -107,7 +102,7 @@ CREATE TABLE `utilisateur` (
 
 LOCK TABLES `utilisateur` WRITE;
 /*!40000 ALTER TABLE `utilisateur` DISABLE KEYS */;
-INSERT INTO `utilisateur` VALUES (00002,'Jade','Poupette','jade@gmail.com','titpoupette'),(00003,'Thomas','Salin','toto@gmail.com','Jade'),(00004,'Caroline','Jeannot','caro@gmail.com','Jade'),(00005,'Minnie','Mousse','minnie@gmail.com','$2b$10$XR07MhkVBx0sdrtgUsqP8uBV6LcuXkAwCT8W0dH1s9fA/0iZVLf2C'),(00006,'Min','Mou','mine@gmail.com','$2b$10$XE.eSNLBpsAA5AvYs6SOWOKQNO6QXQ20oFBkwMCwnMDNkkYcyKLti'),(00024,'petite','sirene','sirene@gmail.com','$2b$10$pvM4oF4H9sTfPYxT5quf3ueB1KUXosIOnXDWWOw77QWOFyuOlRYZS'),(00025,'Blanche','Neige','nain@gmail.com','$2b$10$M3ayXj.Xyofnl5BOPNJ5p.wnbnBZGE4h29wgfvZIF6d0c9MyKKoxa');
+INSERT INTO `utilisateur` VALUES (00176,'admin','groupomania','admin@groupomania.fr','$2b$10$tC9KUgxVWGmihmpS.GNOB.BmU74XtklC8xkfPRzWTQXKICRCfL3N2','2021-07-29 13:20:39','http://localhost:3000/photos/admin-settings-male.png1627652797911.png','1'),(00181,'Minnie','Mouse','minnie@gmail.com','$2b$10$CY/jf0VFVF5zhkQAPOKXbe9OnPkBwZX1gFnnPMnekFhW2ml4FwDRi','2021-07-29 17:18:10','http://localhost:3000/photos/Minnie_Mouse_Infobox.jpg1627571968400.jpeg','0'),(00182,'Thomas','Salin','toto@gmail.com','$2b$10$kvammrLfpRSHReDwRjnCfOFDVKA5koSLV34Vo43auEAbCGLw2zwX6','2021-07-30 14:50:30','http://localhost:3000/photos/SnakeSubArt.png1627649648319.png','0');
 /*!40000 ALTER TABLE `utilisateur` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -120,4 +115,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-07-16 11:09:01
+-- Dump completed on 2021-07-30 17:31:08
