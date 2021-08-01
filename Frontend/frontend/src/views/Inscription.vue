@@ -20,8 +20,8 @@
         </div>
 
         <div class="form-group pb-2">
-            <label for="mot_de_passe">Mot de passe</label><br>
-            <input type="text" id="password" name="password" required v-model="password">
+            <label for="password">Mot de passe</label><br>
+            <input type="password" id="password" name="password" required v-model="password">
         </div>
 
         <div class=" form-group">

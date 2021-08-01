@@ -25,7 +25,7 @@
                     <p class="fw-bold m-1">Prénom : {{ user.prenom }}</p>
                     <p class="fw-bold m-1">Nom: {{ user.nom }}</p>
                     <p class="fw-bold m-1">Email : {{ user.email}}</p>
-                    <p class="fw-bold m-1">Incrit le {{ user.dateInscription }}</p>
+                    <p class="fw-bold m-1">Inscrit le {{ user.dateInscription }}</p>
                 </div>
                 <div class="text-center my-1" v-show="user.id === visitor.id || visitor.admin === 1">
                     <bouton @click="deleteUser(`${user.id}`)" intitule="Supprimer le compte"/>
@@ -293,7 +293,7 @@ export default {
     padding: 10px;
     font-weight: bolder;
     font-size: 14px;
-    color: white;
+    color: black;
     cursor: pointer;
     transition: 300ms ease-in-out;
 }
@@ -332,7 +332,7 @@ photo_gif{
 
 .link{
     text-decoration: none;
-    color: #fd2d01;
+    color: #E42701;
 }
 
 .effet{

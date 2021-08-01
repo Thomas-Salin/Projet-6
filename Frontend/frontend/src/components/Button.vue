@@ -1,6 +1,6 @@
 <template>
 
-    <button class="params_button my-3 effet">{{ intitule }}</button>
+    <button class="params_button text-black my-3 effet">{{ intitule }}</button>
 
 </template>
 
@@ -21,7 +21,6 @@ export default {
     background-color: #fd2d01;
     padding: 8px;
     font-weight: bold;
-    color: white;
 }
 
 .effet{

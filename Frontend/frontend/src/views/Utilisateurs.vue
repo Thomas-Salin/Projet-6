@@ -75,7 +75,7 @@ export default {
 
 .link{
     text-decoration: none;
-    color: #fd2d01;
+    color: #E42701;
 }
 
 </style>

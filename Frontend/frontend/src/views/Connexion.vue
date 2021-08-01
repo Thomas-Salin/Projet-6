@@ -11,7 +11,7 @@
 
         <div class="form-group pb-2">
             <label for="mot_de_passe">Mot de passe</label><br>
-            <input type="text" id="mot_de_passe" name="mot_de_passe" required v-model="password">
+            <input type="password" id="mot_de_passe" name="mot_de_passe" required v-model="password">
         </div>
 
         <div class="form-group p-4">

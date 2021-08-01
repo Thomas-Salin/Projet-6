@@ -17,7 +17,7 @@
             <div class=" shadow-lg my-5 card col-12 col-md-6 border-2 mx-auto colorgroupomania">
                 <div class="card-body text-center p-3">
                     <div class="border border-dark w-75 text-center mx-auto my-2">
-                       <img id="newgif" class="w-100 photo_gif" :src="gifFile"> 
+                       <img id="newgif" class="w-100 photo_gif" :src="gifFile" alt="image_nouveau_post"> 
                     </div>
                     <label for="titre_post">Titre</label><br>
                     <input class="my-3" type="text" id="titre_post" name="titre_post" v-model="newGif.titre"><br>
@@ -41,7 +41,7 @@
         <div class="row">
             
             <div class="shadow-lg my-5 card col-12 col-md-6 mx-auto border-2 colorgroupomania">
-                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100 photo_gif" :src="post.gif_url" alt="photo_gif"></router-link>
+                <router-link :to="{ path: 'post', query: {gifId: `${post.id}`}}" class="border border-dark mt-5 text-center  w-75 mx-auto"><img class="w-100 photo_gif" :src="post.gif_url" alt="photo_post"></router-link>
                 <div class="card-body m-0">
                    <p class="text-center fs-4 fw-bold">{{ post.titre }}</p>
                    <div class="d-flex text-align p-0 border border-dark rounded">
@@ -192,7 +192,7 @@ photo_gif{
     padding: 10px;
     font-weight: bolder;
     font-size: 14px;
-    color: white;
+    color: black;
     cursor: pointer;
     transition: 300ms ease-in-out;
     
@@ -210,7 +210,7 @@ photo_gif{
 
 .link{
     text-decoration: none;
-    color: #fd2d01;
+    color: #E42701;
 }
 
 .effet:hover{

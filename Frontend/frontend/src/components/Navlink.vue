@@ -9,13 +9,13 @@
     <div class="collapse navbar-collapse" id="navbarToggler">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <router-link class="nav-link text-light" to="/utilisateurs">Utilisateurs</router-link>
+          <router-link class="nav-link text-white" to="/utilisateurs">Utilisateurs</router-link>
         </li>
         <li class="nav-item" @click="reload()">
-          <router-link class="nav-link text-light" :to="{ path: 'profil', query: { userId: id }}">Profil</router-link>
+          <router-link class="nav-link text-white" :to="{ path: 'profil', query: { userId: id }}">Profil</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link text-light" @click="sessionStorageClear()" to="/connexion">Deconnexion</router-link>
+          <router-link class="nav-link text-white" @click="sessionStorageClear()" to="/connexion">Deconnexion</router-link>
         </li>
       </ul>
     </div>

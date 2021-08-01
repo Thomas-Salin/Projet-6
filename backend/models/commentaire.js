@@ -24,10 +24,10 @@ class Commentaire {
         return connection.promise().query(`INSERT INTO Commentaire (commentaire, utilisateur_id, gif_id, date_heure_publication) VALUES (?, ?, ?, NOW())`, [this.texte, this.utilisateurId, this.gifId])
     }
     findAll(gifId){
-        return connection.promise().query(`SELECT commentaire.id, commentaire, utilisateur.prenom AS prenom_commentaire, utilisateur.nom AS nom_commentaire, DATE_FORMAT(date_heure_publication, '%e/%c/%Y à %kh%i') AS date_commentaire, utilisateur.photo_profil, utilisateur.id AS utilisateur_id  FROM commentaire INNER JOIN Utilisateur ON commentaire.utilisateur_id = Utilisateur.id WHERE gif_id = ? ORDER BY date_commentaire DESC `, [gifId])
+        return connection.promise().query(`SELECT commentaire.id, commentaire, utilisateur.prenom AS prenom_commentaire, utilisateur.nom AS nom_commentaire, DATE_FORMAT(date_heure_publication, '%e/%c/%Y à %kh%i') AS date_commentaire, utilisateur.photo_profil, utilisateur.id AS utilisateur_id  FROM commentaire INNER JOIN Utilisateur ON commentaire.utilisateur_id = Utilisateur.id WHERE gif_id = ? ORDER BY commentaire.id DESC `, [gifId])
     }
     find(userId){
-        return connection.promise().query(`SELECT commentaire.id, commentaire, DATE_FORMAT(date_heure_publication, '%e/%c/%Y à %kh%i') AS date FROM Commentaire WHERE utilisateur_id = ? `, [userId])
+        return connection.promise().query(`SELECT commentaire.id, commentaire, DATE_FORMAT(date_heure_publication, '%e/%c/%Y à %kh%i') AS date FROM Commentaire WHERE utilisateur_id = ? LIMIT 4 `, [userId])
     }
     countgif(gifId){
         return connection.promise().query(`SELECT COUNT(*) AS count FROM Commentaire WHERE gif_id = ?`, [gifId])
