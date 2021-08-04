@@ -16,7 +16,7 @@
 
             <div class=" shadow-lg my-5 card col-12 col-md-6 border-2 mx-auto colorgroupomania">
                 <div class="card-body text-center p-3">
-                    <div class="border border-dark w-75 text-center mx-auto my-2">
+                    <div class="border border-dark w-75 text-center mx-auto my-2 photo_gif">
                        <img id="newgif" class="w-100 photo_gif" :src="gifFile" alt="image_nouveau_post"> 
                     </div>
                     <label for="titre_post">Titre</label><br>
@@ -145,6 +145,7 @@ export default {
 
         uploadNewGif(){
 
+            const token = sessionStorage.getItem('token');
             const newGif = new FormData()
             newGif.append('utilisateurId', this.newGif.utilisateurId)
             newGif.append('titre', this.newGif.titre)
@@ -153,6 +154,9 @@ export default {
             
             fetch('http://localhost:3000/api/gifs', {
                 method: "POST",
+                headers: new Headers({
+                    'Authorization': 'Bearer '+token,
+            }),
                 body: newGif
             })
             .then(response => {
@@ -176,9 +180,8 @@ export default {
     width: 60px 
 }
 
-photo_gif{
+.photo_gif{
     object-fit: contain;
-    height: 300px;
 }
 
 #bouton{

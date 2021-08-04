@@ -5,7 +5,7 @@ const multer = require('../middleware/multer-config-gif');
 const router = express.Router();
 
 
-router.post('/', multer, gifController.createGif);
+router.post('/', auth, multer, gifController.createGif);
 
 router.get('/', auth, gifController.getAllGif);
 
