@@ -10,5 +10,5 @@
 
     - Création d'un compte utilisateur : 
 
-        <img src="/images_app/"ImgInscrip">
+        ![Screenshot](ImgInscrip.png)
 
