@@ -1,13 +1,14 @@
-# Thomas-Salin_07_11072021
+# Projet 7 : Créer un réseau social interne d'entreprise : Groupomania.
 
-# Reseau Groupomania
+# Objectif du projet : 
 
-This project was generated with node v.14.15.5 and nodemon 2.0.12 and @vue/cli 4.5.13 and mysql.
+    - Administrer la base de données avec MySQL
+    - Créer son API avec Node.js et son framework Express
+    - Créer et implémenter l'interface client avec Vue.js
 
-Clone this repo and run npm install.
+# Fonctionnalités proposées V1 : 
 
-# Usage 
+    - Création d'un compte utilisateur : 
 
-- Run npm serve in files "frontend"
-- Run nodemon server in files "backend" 
+        <img src="/images_app/"ImgInscrip">
 
